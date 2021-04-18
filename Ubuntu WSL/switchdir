@@ -1,0 +1,13 @@
+#!/bin/bash
+
+currentswitchdir=$( cat ~/executables/resources/switchdirfile )
+rm ~/executables/resources/switchdirfile
+
+if [ $currentswitchdir = "/home/coopster" ]; then
+    echo "/mnt/c/Users/Coopster" >> ~/executables/resources/switchdirfile
+else
+    echo "/home/coopster" >> ~/executables/resources/switchdirfile
+fi  
+newdir="$( cat ~/executables/resources/switchdirfile )"
+
+cd "$newdir"

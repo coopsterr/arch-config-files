@@ -1,0 +1,120 @@
+#!/bin/bash
+
+EXIT="\[\e[m\]"
+RED="\[\e[31m\]"
+GREEN="\[\e[32m\]"
+YELLOW="\[\e[33m\]"
+BLUE="\[\e[34m\]"
+CYAN="\[\e[36m\]"
+MAGENTA="\[\e[35m\]"
+WHITE="\[\e[37m\]"
+BLACK="\[\e[30m\]"
+DEFAULT=""
+SECTIONZERO="▓▒░"
+SECTIONONE="[\A \d][\s]"
+SECTIONTWO="[\u@\h "
+SECTIONTHREE="\W"
+SECTIONFOUR="]"
+SECTIONFIVE="\\$ "
+
+help() {
+    echo "flags:"
+    echo "-f    full"
+    echo "-s    simple"
+    echo "-m    minimal"
+    echo "-c (color)"
+    echo " "
+    echo "colors:"
+    echo "red, green, blue, yellow,"
+    echo "blue, cyan, magenta, "
+    echo "white, black, default"
+}
+
+
+
+color() {
+    if [ "$1" = "Default" ] || [ "$1" = "default" ]
+    then
+      colorcode="$DEFAULT"
+
+    elif [ "$1" = "Red" ] || [ "$1" = "red" ]
+    then
+      colorcode="$RED"
+
+    elif [ "$1" = "Green" ] || [ "$1" = "green" ]
+    then
+      colorcode="$GREEN"
+
+    elif [ "$1" = "Yellow" ] || [ "$1" = "yellow" ]
+    then
+      colorcode="$YELLOW"
+
+    elif [ "$1" = "Blue" ] || [ "$1" = "blue" ]
+    then
+      colorcode="$BLUE"
+
+    elif [ "$1" = "Cyan" ] || [ "$1" = "cyan" ]
+    then
+      colorcode="$CYAN"
+
+    elif [ "$1" = "Magenta" ] || [ "$1" = "magenta" ]
+    then
+      colorcode="$MAGENTA"
+
+    elif [ "$1" = "White" ] || [ "$1" = "white" ]
+    then
+      colorcode="$WHITE"
+
+    elif [ "$1" = "Black" ] || [ "$1" = "black" ]
+    then
+      colorcode="$BLACK"
+    else
+      echo "incorrect/no color entered, choosing default"
+      colorcode="$DEFAULT"
+    fi
+
+  
+}
+
+simple() {
+    PS1="░▒▓[\u@\h \W]\\$  "
+    commit "░▒▓[\u@\h \W]\\$  "
+
+}
+
+while getopts 'hf:s:m' flag; do
+  case "${flag}" in
+    h)  help ;;
+    f)  color $OPTARG
+        type="full" ;;
+    s)  color $OPTARG 
+        type="simple" ;;
+    m)  colorcode="" 
+        type="minimal";;
+    *) error_msg 
+       exit 1 ;;
+  esac
+done
+
+
+if [ $type = "full" ]
+then
+
+  fullfirstsection="$colorcode$SECTIONZERO$SECTIONONE$exit"
+  fullcode="$fullfirstsection$colorcode$SECTIONTWO$EXIT$SECTIONTHREE$colorcode$SECTIONFOUR$EXIT$SECTIONFIVE"
+
+elif [ "$type" = "simple" ]
+then
+  fullcode="$colorcode$SECTIONZERO$SECTIONTWO$EXIT$SECTIONTHREE$colorcode$SECTIONFOUR$EXIT$SECTIONFIVE"
+
+elif [ "$type" = "minimal" ]
+then
+  fullcode="$SECTIONFIVE"
+else
+  exit
+fi
+
+rm /home/coopster/executables/resources/promptfile
+echo -n $fullcode >> /home/coopster/executables/resources/promptfile
+echo -n " " >> /home/coopster/executables/resources/promptfile
+echo "please refresh bash"
